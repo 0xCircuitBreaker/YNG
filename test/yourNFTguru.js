@@ -1,12 +1,13 @@
 const { expect } = require("chai");
+const MINTER_ROLE = ethers.utils.keccak256(ethers.utils.toUtf8Bytes("MINTER_ROLE"));
 
 describe("yourNFTguru", function () {
   let yourNFTguru;
   let adminRole;
   let minterRole;
-  let devAddress;
   let mintToAddresses;
   let mintAmounts;
+  let devAddress;
 
   beforeEach(async function () {
     const YourNFTguru = await ethers.getContractFactory("yourNFTguru");
@@ -54,9 +55,9 @@ describe("yourNFTguru", function () {
 
   it("should allow the admin role to grant and revoke the minter role", async function () {
     const newMinter = await ethers.getSigner();
-    await yourNFTguru.connect(adminRole).grantMinterRole(newMinter.address);
-    expect(await yourNFTguru.hasRole(minterRole.address, newMinter.address)).to.equal(true);
-    await yourNFTguru.connect(adminRole).revokeMinterRole(newMinter.address);
-    expect(await yourNFTguru.hasRole(minterRole.address, newMinter.address)).to.equal(false);
+    await yourNFTguru.connect(adminRole).grantRole(MINTER_ROLE, newMinter.address);
+    expect(await yourNFTguru.hasRole(MINTER_ROLE, newMinter.address)).to.equal(true);
+    await yourNFTguru.connect(adminRole).revokeRole(MINTER_ROLE, newMinter.address);
+    expect(await yourNFTguru.hasRole(MINTER_ROLE, newMinter.address)).to.equal(false);
   });
 });
